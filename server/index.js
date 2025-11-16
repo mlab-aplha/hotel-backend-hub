@@ -7,6 +7,7 @@ import reviewsRouter from './routes/reviews.js';
 import roomsRouter from './routes/rooms.js';
 import favoritesRouter from './routes/favorites.js';
 import notificationsRouter from './routes/notifications.js';
+import paymentsRouter from './routes/payments.js';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/api/reviews', reviewsRouter);
 app.use('/api/rooms', roomsRouter);
 app.use('/api/favorites', favoritesRouter);
 app.use('/api/notifications', notificationsRouter);
+app.use('/api/payments', paymentsRouter);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -43,6 +45,7 @@ app.get('/', (req, res) => {
       rooms: '/api/rooms',
       favorites: '/api/favorites',
       notifications: '/api/notifications',
+      payments: '/api/payments',
     },
   });
 });
