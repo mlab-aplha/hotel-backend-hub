@@ -423,6 +423,71 @@ Delete a notification.
 
 ---
 
+### Payments API (Supabase Edge Functions)
+
+#### POST - Create Checkout Session (Authenticated)
+
+Create a Stripe checkout session for a booking payment.
+
+**Endpoint:** `POST /functions/v1/create-checkout`
+
+**Request Body:**
+
+```json
+{
+  "bookingId": "uuid"
+}
+```
+
+**Response:**
+
+```json
+{
+  "url": "https://checkout.stripe.com/c/pay/..."
+}
+```
+
+**Usage:**
+1. Create a booking first (which generates a `bookingId`)
+2. Call this endpoint with the `bookingId` to get a Stripe checkout URL
+3. Redirect the user to the checkout URL
+4. After payment, Stripe redirects to your success/cancel URLs
+
+#### POST - Verify Payment (Authenticated)
+
+Verify a Stripe payment and update booking status.
+
+**Endpoint:** `POST /functions/v1/verify-payment`
+
+**Request Body:**
+
+```json
+{
+  "sessionId": "cs_test_..."
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "booking": {
+    "id": "uuid",
+    "status": "confirmed",
+    "payment_status": "paid",
+    "payment_intent_id": "pi_..."
+  }
+}
+```
+
+**Usage:**
+1. After successful checkout, get the `session_id` from Stripe's redirect URL
+2. Call this endpoint to verify payment and update the booking
+3. The booking status will be updated to `confirmed` and payment_status to `paid`
+
+---
+
 ## Status Codes
 
 - `200` - Success
