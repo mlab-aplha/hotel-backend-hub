@@ -1,93 +1,89 @@
-# Testing Documentation
+# Backend Testing Documentation
 
-This project uses comprehensive testing to ensure 100% functionality.
+This project uses Deno tests to ensure all backend edge functions work correctly.
 
 ## Test Structure
-
-### Frontend Tests (Vitest)
-Located in `src/test/`
-
-- **Unit Tests**: Test individual components and utilities
-- **Integration Tests**: Test Supabase client and API interactions
-- **Setup**: `src/test/setup.ts` configures the testing environment
 
 ### Backend Tests (Deno)
 Located in `supabase/functions/_tests/`
 
-- **Edge Function Tests**: Test all Supabase edge functions
-- **API Tests**: Verify authentication, authorization, and functionality
-- **Payment Tests**: Test Stripe integration endpoints
+All tests verify:
+- **Authentication**: Protected endpoints require valid JWT tokens
+- **Authorization**: Users can only access their own data
+- **Validation**: Required parameters and input validation
+- **CORS**: Proper CORS headers are configured
+- **Error Handling**: Appropriate error responses
 
 ## Running Tests
 
-### Frontend Tests
-
 ```bash
-# Run all frontend tests
-npm run test
-
-# Run tests in watch mode
-npm run test
-
-# Run tests with UI
-npm run test:ui
-
-# Run tests with coverage report
-npm run test:coverage
-```
-
-### Backend Tests (Edge Functions)
-
-```bash
-# Run all edge function tests
+# Run all backend tests
 supabase functions test
 
 # Run specific test file
 supabase functions test _tests/payments.test.ts
 supabase functions test _tests/hotels.test.ts
+supabase functions test _tests/bookings.test.ts
 ```
 
 ## Test Coverage
 
 ### Edge Functions
-✅ Hotels API - Create, read, update, delete operations
-✅ Rooms API - Room management and queries
-✅ Bookings API - Booking creation and management
-✅ Reviews API - Review CRUD operations
-✅ Favorites API - User favorites management
-✅ Notifications API - Notification handling
-✅ **Payments API** - Stripe checkout and verification
+✅ **Hotels API** - Create, read, update, delete operations (admin only for mutations)
+✅ **Rooms API** - Room management and queries (admin only for mutations)
+✅ **Bookings API** - Booking creation and management (authenticated users)
+✅ **Reviews API** - Review CRUD operations (authenticated users)
+✅ **Favorites API** - User favorites management (authenticated users)
+✅ **Notifications API** - Notification handling (authenticated users)
+✅ **Payments API** - Stripe checkout and payment verification (authenticated users)
 
-### Frontend
-✅ Supabase client initialization
-✅ Public table queries (hotels, rooms, reviews)
-✅ RLS policy verification
-✅ Component rendering with providers
-✅ Environment configuration
+## Test Files
+
+### Hotels Tests (`hotels.test.ts`)
+- GET /hotels - Public access to hotel listings
+- GET /hotels with search - Filtering functionality
+- POST /hotels - Admin authentication required
+
+### Bookings Tests (`bookings.test.ts`)
+- POST /bookings - Authentication required
+- GET /bookings - User's own bookings only
+
+### Reviews Tests (`reviews.test.ts`)
+- GET /reviews - Public access to reviews
+- POST /reviews - Authentication required to create
+- DELETE /reviews - Owner or admin can delete
+
+### Rooms Tests (`rooms.test.ts`)
+- GET /rooms - Public access to room listings
+- POST /rooms - Admin authentication required
+- PUT /rooms - Admin authentication required
+
+### Favorites Tests (`favorites.test.ts`)
+- GET /favorites - Authentication required
+- POST /favorites - Authentication required
+- DELETE /favorites - Authentication required
+
+### Notifications Tests (`notifications.test.ts`)
+- GET /notifications - Authentication required
+- PUT /notifications - Authentication required to mark as read
+- POST /notifications - Admin authentication required
+
+### Payments Tests (`payments.test.ts`)
+- POST /create-checkout - Authentication required, bookingId validation
+- POST /verify-payment - Authentication required, sessionId validation
+- OPTIONS requests - CORS preflight handling
 
 ## Writing New Tests
-
-### Frontend Test Example
-
-```typescript
-import { describe, it, expect } from 'vitest';
-import { renderWithProviders } from '@/test/example.test';
-import YourComponent from '@/components/YourComponent';
-
-describe('YourComponent', () => {
-  it('should render correctly', () => {
-    const { getByText } = renderWithProviders(<YourComponent />);
-    expect(getByText('Expected Text')).toBeInTheDocument();
-  });
-});
-```
 
 ### Backend Test Example
 
 ```typescript
-import { assertEquals } from "https://deno.land/std@0.192.0/testing/asserts.ts";
+import { assertEquals, assertExists } from "https://deno.land/std@0.192.0/testing/asserts.ts";
 
-Deno.test("Your API - should do something", async () => {
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "";
+
+Deno.test("Your API - should require authentication", async () => {
   const response = await fetch(`${SUPABASE_URL}/functions/v1/your-function`, {
     method: "POST",
     headers: {
@@ -97,7 +93,9 @@ Deno.test("Your API - should do something", async () => {
     body: JSON.stringify({ data: "test" }),
   });
 
-  assertEquals(response.status, 200);
+  assertEquals(response.status, 401);
+  const data = await response.json();
+  assertExists(data.error);
 });
 ```
 
@@ -105,10 +103,16 @@ Deno.test("Your API - should do something", async () => {
 
 1. **Test Authentication**: Always verify that protected endpoints require authentication
 2. **Test Authorization**: Ensure users can only access their own data
-3. **Test Validation**: Verify input validation and error handling
+3. **Test Validation**: Verify input validation and required parameters
 4. **Test CORS**: Check that CORS headers are properly configured
-5. **Mock External Services**: Mock Stripe and other external APIs in tests
-6. **Test Edge Cases**: Include tests for error conditions and edge cases
+5. **Test Error Cases**: Include tests for error conditions
+6. **No Real Data**: Tests should not modify actual database data
+
+## Environment Variables
+
+Tests use these environment variables:
+- `SUPABASE_URL` - Your Supabase project URL
+- `SUPABASE_ANON_KEY` - Supabase anonymous key
 
 ## CI/CD Integration
 
@@ -116,28 +120,34 @@ Tests can be integrated into your CI/CD pipeline:
 
 ```yaml
 # Example GitHub Actions
-- name: Run Frontend Tests
-  run: npm run test:coverage
-
 - name: Run Backend Tests
   run: supabase functions test
 ```
 
+## Security Testing
+
+All tests verify:
+- ✅ RLS policies are enforced
+- ✅ Authentication is required for protected endpoints
+- ✅ Users cannot access other users' data
+- ✅ Admin endpoints require admin role
+- ✅ Input validation prevents injection attacks
+
 ## Troubleshooting
 
-### Frontend Tests Fail
-- Ensure environment variables are set in `src/test/setup.ts`
-- Check that all dependencies are installed: `npm install`
-- Verify Supabase client is properly mocked
-
-### Backend Tests Fail
+### Tests Fail
 - Ensure `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set
 - Check that edge functions are deployed
 - Verify database tables and RLS policies are configured
+- Review edge function logs for errors
+
+### Authentication Errors
+- Verify JWT token format in Authorization header
+- Check that auth.users table exists
+- Ensure RLS policies reference auth.uid() correctly
 
 ## Coverage Goals
 
-- **Frontend**: Aim for 80%+ code coverage
 - **Backend**: Test all API endpoints and error cases
-- **Integration**: Verify end-to-end user flows
 - **Security**: Test all authentication and authorization paths
+- **Integration**: Verify end-to-end payment flows
