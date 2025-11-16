@@ -2,12 +2,25 @@
 
 ## Overview
 
-This is a comprehensive REST API for a hotel booking system (Supabase Edge Functions). All endpoints follow RESTful standards with proper HTTP methods and status codes.
+This is a comprehensive REST API for a hotel booking system built with Express.js and deployed on Render. All endpoints follow RESTful standards with proper HTTP methods and status codes.
 
 ## Base URL
 
 ```
-https://uktflnzynfwoqpurgbhm.supabase.co/functions/v1
+https://hotel-backend-hub.onrender.com
+```
+
+**Health Check Endpoint:**
+```
+GET https://hotel-backend-hub.onrender.com/health
+```
+
+Response:
+```json
+{
+  "status": "ok",
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
 ```
 
 ## Authentication
@@ -20,13 +33,18 @@ Authorization: Bearer YOUR_JWT_TOKEN
 
 ## API Endpoints
 
-### Hotels API (`/hotels`)
+### Hotels API (`/api/hotels`)
 
 #### GET - List Hotels
 
 Fetch all hotels with optional filters.
 
-**Endpoint:** `GET /hotels`
+**Endpoint:** `GET /api/hotels`
+
+**Example:**
+```
+GET https://hotel-backend-hub.onrender.com/api/hotels?city=New%20York&rating=4
+```
 
 **Query Parameters:**
 
@@ -68,7 +86,7 @@ Fetch all hotels with optional filters.
 
 Create a new hotel.
 
-**Endpoint:** `POST /hotels`
+**Endpoint:** `POST /api/hotels`
 
 **Request Body:**
 
@@ -92,7 +110,7 @@ Create a new hotel.
 
 Update hotel details.
 
-**Endpoint:** `PUT /hotels?id=HOTEL_ID`
+**Endpoint:** `PUT /api/hotels?id=HOTEL_ID`
 
 **Request Body:** Any hotel fields to update
 
@@ -100,17 +118,17 @@ Update hotel details.
 
 Delete a hotel.
 
-**Endpoint:** `DELETE /hotels?id=HOTEL_ID`
+**Endpoint:** `DELETE /api/hotels?id=HOTEL_ID`
 
 ---
 
-### Rooms API (`/rooms`)
+### Rooms API (`/api/rooms`)
 
 #### GET - List Rooms
 
 Fetch rooms with optional filters.
 
-**Endpoint:** `GET /rooms`
+**Endpoint:** `GET /api/rooms`
 
 **Query Parameters:**
 
@@ -140,7 +158,7 @@ Fetch rooms with optional filters.
 
 Add a new room type to a hotel.
 
-**Endpoint:** `POST /rooms`
+**Endpoint:** `POST /api/rooms`
 
 **Request Body:**
 
@@ -161,23 +179,23 @@ Add a new room type to a hotel.
 
 Update room details.
 
-**Endpoint:** `PUT /rooms?id=ROOM_ID`
+**Endpoint:** `PUT /api/rooms?id=ROOM_ID`
 
 #### DELETE - Delete Room (Admin Only)
 
 Delete a room type.
 
-**Endpoint:** `DELETE /rooms?id=ROOM_ID`
+**Endpoint:** `DELETE /api/rooms?id=ROOM_ID`
 
 ---
 
-### Bookings API (`/bookings`)
+### Bookings API (`/api/bookings`)
 
 #### GET - List Bookings (Authenticated)
 
 Fetch user's bookings or all bookings (admin).
 
-**Endpoint:** `GET /bookings`
+**Endpoint:** `GET /api/bookings`
 
 **Query Parameters:**
 
@@ -209,7 +227,7 @@ Fetch user's bookings or all bookings (admin).
 
 Create a new booking.
 
-**Endpoint:** `POST /bookings`
+**Endpoint:** `POST /api/bookings`
 
 **Request Body:**
 
@@ -230,7 +248,7 @@ Create a new booking.
 
 Update booking status or details.
 
-**Endpoint:** `PUT /bookings?id=BOOKING_ID`
+**Endpoint:** `PUT /api/bookings?id=BOOKING_ID`
 
 **Request Body:**
 
@@ -245,17 +263,17 @@ Update booking status or details.
 
 Delete a booking.
 
-**Endpoint:** `DELETE /bookings?id=BOOKING_ID`
+**Endpoint:** `DELETE /api/bookings?id=BOOKING_ID`
 
 ---
 
-### Reviews API (`/reviews`)
+### Reviews API (`/api/reviews`)
 
 #### GET - List Reviews
 
 Fetch reviews for hotels.
 
-**Endpoint:** `GET /reviews`
+**Endpoint:** `GET /api/reviews`
 
 **Query Parameters:**
 
@@ -283,7 +301,7 @@ Fetch reviews for hotels.
 
 Create a review for a hotel.
 
-**Endpoint:** `POST /reviews`
+**Endpoint:** `POST /api/reviews`
 
 **Request Body:**
 
@@ -301,7 +319,7 @@ Create a review for a hotel.
 
 Update your own review.
 
-**Endpoint:** `PUT /reviews?id=REVIEW_ID`
+**Endpoint:** `PUT /api/reviews?id=REVIEW_ID`
 
 **Request Body:**
 
@@ -316,17 +334,17 @@ Update your own review.
 
 Delete your own review.
 
-**Endpoint:** `DELETE /reviews?id=REVIEW_ID`
+**Endpoint:** `DELETE /api/reviews?id=REVIEW_ID`
 
 ---
 
-### Favorites API (`/favorites`)
+### Favorites API (`/api/favorites`)
 
 #### GET - List Favorites (Authenticated)
 
 Fetch user's favorite hotels.
 
-**Endpoint:** `GET /favorites`
+**Endpoint:** `GET /api/favorites`
 
 **Response:**
 
@@ -345,7 +363,7 @@ Fetch user's favorite hotels.
 
 Add a hotel to favorites.
 
-**Endpoint:** `POST /favorites`
+**Endpoint:** `POST /api/favorites`
 
 **Request Body:**
 
@@ -359,17 +377,17 @@ Add a hotel to favorites.
 
 Remove a hotel from favorites.
 
-**Endpoint:** `DELETE /favorites?hotel_id=HOTEL_ID`
+**Endpoint:** `DELETE /api/favorites?hotel_id=HOTEL_ID`
 
 ---
 
-### Notifications API (`/notifications`)
+### Notifications API (`/api/notifications`)
 
 #### GET - List Notifications (Authenticated)
 
 Fetch user's notifications.
 
-**Endpoint:** `GET /notifications`
+**Endpoint:** `GET /api/notifications`
 
 **Query Parameters:**
 
@@ -395,13 +413,13 @@ Fetch user's notifications.
 
 Mark a notification as read.
 
-**Endpoint:** `PUT /notifications?id=NOTIFICATION_ID`
+**Endpoint:** `PUT /api/notifications?id=NOTIFICATION_ID`
 
 #### DELETE - Delete Notification (Authenticated)
 
 Delete a notification.
 
-**Endpoint:** `DELETE /notifications?id=NOTIFICATION_ID`
+**Endpoint:** `DELETE /api/notifications?id=NOTIFICATION_ID`
 
 ---
 
@@ -471,3 +489,56 @@ Delete a notification.
 - Prices are stored as DECIMAL(10, 2)
 - Room availability is automatically managed on booking/cancellation
 - Notifications are automatically created for bookings and status changes
+
+## Deployment
+
+This API is deployed on **Render** at:
+```
+https://hotel-backend-hub.onrender.com
+```
+
+### Environment Variables Required
+
+The following environment variables must be configured in Render:
+
+- `SUPABASE_URL` - Your Supabase project URL
+- `SUPABASE_ANON_KEY` - Your Supabase anonymous key
+- `NODE_ENV` - Set to `production`
+
+### Testing the Deployment
+
+#### Health Check
+```bash
+curl https://hotel-backend-hub.onrender.com/health
+```
+
+#### List Hotels (No Auth Required)
+```bash
+curl https://hotel-backend-hub.onrender.com/api/hotels
+```
+
+#### Create Booking (Auth Required)
+```bash
+curl -X POST https://hotel-backend-hub.onrender.com/api/bookings \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "room_id": "uuid",
+    "check_in_date": "2024-12-01",
+    "check_out_date": "2024-12-05",
+    "number_of_rooms": 1,
+    "number_of_guests": 2
+  }'
+```
+
+### Authentication Flow
+
+1. Users authenticate through Supabase Auth
+2. Frontend receives JWT token from Supabase
+3. Token is included in `Authorization: Bearer <token>` header for API requests
+4. Backend validates token against Supabase
+5. User information is extracted and used for RLS policies
+
+### CORS
+
+CORS is enabled for all origins in the current configuration. For production, configure specific allowed origins in the Express CORS middleware.
