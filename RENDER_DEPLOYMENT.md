@@ -27,6 +27,7 @@ This guide will help you deploy your hotel booking backend to Render.
    - Render will prompt you to set:
      - `SUPABASE_URL`: `https://uktflnzynfwoqpurgbhm.supabase.co`
      - `SUPABASE_ANON_KEY`: Your Lovable Cloud anon key
+     - `STRIPE_SECRET_KEY`: `rk_test_51STzPCH0PYWHG0pzNG2iwIPDOLUnsVcyL3FJDTxYcMjnY2skNG4Oq3ZsWf9h724gNvUMgHyvv1hfJPlqW3GpXzgD007JcXQYks`
 
 4. **Deploy**
    - Click "Apply" to start deployment
@@ -54,6 +55,7 @@ This guide will help you deploy your hotel booking backend to Render.
      NODE_ENV=production
      SUPABASE_URL=https://uktflnzynfwoqpurgbhm.supabase.co
      SUPABASE_ANON_KEY=your_anon_key_here
+     STRIPE_SECRET_KEY=rk_test_51STzPCH0PYWHG0pzNG2iwIPDOLUnsVcyL3FJDTxYcMjnY2skNG4Oq3ZsWf9h724gNvUMgHyvv1hfJPlqW3GpXzgD007JcXQYks
      ```
 
 4. **Deploy**
