@@ -1,15 +1,19 @@
 # Hotel Booking API Documentation
 
 ## Overview
-This is a comprehensive REST API for a hotel booking system built with Lovable Cloud (Supabase Edge Functions). All endpoints follow RESTful standards with proper HTTP methods and status codes.
+
+This is a comprehensive REST API for a hotel booking system (Supabase Edge Functions). All endpoints follow RESTful standards with proper HTTP methods and status codes.
 
 ## Base URL
+
 ```
 https://uktflnzynfwoqpurgbhm.supabase.co/functions/v1
 ```
 
 ## Authentication
+
 Most endpoints require authentication using JWT tokens. Include the token in the Authorization header:
+
 ```
 Authorization: Bearer YOUR_JWT_TOKEN
 ```
@@ -19,11 +23,13 @@ Authorization: Bearer YOUR_JWT_TOKEN
 ### Hotels API (`/hotels`)
 
 #### GET - List Hotels
+
 Fetch all hotels with optional filters.
 
 **Endpoint:** `GET /hotels`
 
 **Query Parameters:**
+
 - `id` - Hotel ID (returns single hotel)
 - `city` - Filter by city (case-insensitive)
 - `country` - Filter by country (case-insensitive)
@@ -33,6 +39,7 @@ Fetch all hotels with optional filters.
 - `search` - Search in name, description, or city
 
 **Response:**
+
 ```json
 [
   {
@@ -58,11 +65,13 @@ Fetch all hotels with optional filters.
 ```
 
 #### POST - Create Hotel (Admin Only)
+
 Create a new hotel.
 
 **Endpoint:** `POST /hotels`
 
 **Request Body:**
+
 ```json
 {
   "name": "Grand Hotel",
@@ -80,6 +89,7 @@ Create a new hotel.
 ```
 
 #### PUT - Update Hotel (Admin Only)
+
 Update hotel details.
 
 **Endpoint:** `PUT /hotels?id=HOTEL_ID`
@@ -87,6 +97,7 @@ Update hotel details.
 **Request Body:** Any hotel fields to update
 
 #### DELETE - Delete Hotel (Admin Only)
+
 Delete a hotel.
 
 **Endpoint:** `DELETE /hotels?id=HOTEL_ID`
@@ -96,15 +107,18 @@ Delete a hotel.
 ### Rooms API (`/rooms`)
 
 #### GET - List Rooms
+
 Fetch rooms with optional filters.
 
 **Endpoint:** `GET /rooms`
 
 **Query Parameters:**
+
 - `id` - Room ID
 - `hotel_id` - Filter by hotel ID
 
 **Response:**
+
 ```json
 [
   {
@@ -123,11 +137,13 @@ Fetch rooms with optional filters.
 ```
 
 #### POST - Create Room (Admin Only)
+
 Add a new room type to a hotel.
 
 **Endpoint:** `POST /rooms`
 
 **Request Body:**
+
 ```json
 {
   "hotel_id": "uuid",
@@ -142,11 +158,13 @@ Add a new room type to a hotel.
 ```
 
 #### PUT - Update Room (Admin Only)
+
 Update room details.
 
 **Endpoint:** `PUT /rooms?id=ROOM_ID`
 
 #### DELETE - Delete Room (Admin Only)
+
 Delete a room type.
 
 **Endpoint:** `DELETE /rooms?id=ROOM_ID`
@@ -156,14 +174,17 @@ Delete a room type.
 ### Bookings API (`/bookings`)
 
 #### GET - List Bookings (Authenticated)
+
 Fetch user's bookings or all bookings (admin).
 
 **Endpoint:** `GET /bookings`
 
 **Query Parameters:**
+
 - `id` - Booking ID
 
 **Response:**
+
 ```json
 [
   {
@@ -185,11 +206,13 @@ Fetch user's bookings or all bookings (admin).
 ```
 
 #### POST - Create Booking (Authenticated)
+
 Create a new booking.
 
 **Endpoint:** `POST /bookings`
 
 **Request Body:**
+
 ```json
 {
   "room_id": "uuid",
@@ -204,11 +227,13 @@ Create a new booking.
 **Response:** Returns created booking with calculated `total_price`
 
 #### PUT - Update Booking
+
 Update booking status or details.
 
 **Endpoint:** `PUT /bookings?id=BOOKING_ID`
 
 **Request Body:**
+
 ```json
 {
   "status": "confirmed",
@@ -217,6 +242,7 @@ Update booking status or details.
 ```
 
 #### DELETE - Delete Booking (Admin Only)
+
 Delete a booking.
 
 **Endpoint:** `DELETE /bookings?id=BOOKING_ID`
@@ -226,15 +252,18 @@ Delete a booking.
 ### Reviews API (`/reviews`)
 
 #### GET - List Reviews
+
 Fetch reviews for hotels.
 
 **Endpoint:** `GET /reviews`
 
 **Query Parameters:**
+
 - `id` - Review ID
 - `hotel_id` - Filter by hotel ID
 
 **Response:**
+
 ```json
 [
   {
@@ -251,11 +280,13 @@ Fetch reviews for hotels.
 ```
 
 #### POST - Create Review (Authenticated)
+
 Create a review for a hotel.
 
 **Endpoint:** `POST /reviews`
 
 **Request Body:**
+
 ```json
 {
   "hotel_id": "uuid",
@@ -267,11 +298,13 @@ Create a review for a hotel.
 **Note:** Users can only review each hotel once.
 
 #### PUT - Update Review (Authenticated)
+
 Update your own review.
 
 **Endpoint:** `PUT /reviews?id=REVIEW_ID`
 
 **Request Body:**
+
 ```json
 {
   "rating": 4,
@@ -280,6 +313,7 @@ Update your own review.
 ```
 
 #### DELETE - Delete Review (Authenticated)
+
 Delete your own review.
 
 **Endpoint:** `DELETE /reviews?id=REVIEW_ID`
@@ -289,11 +323,13 @@ Delete your own review.
 ### Favorites API (`/favorites`)
 
 #### GET - List Favorites (Authenticated)
+
 Fetch user's favorite hotels.
 
 **Endpoint:** `GET /favorites`
 
 **Response:**
+
 ```json
 [
   {
@@ -306,11 +342,13 @@ Fetch user's favorite hotels.
 ```
 
 #### POST - Add to Favorites (Authenticated)
+
 Add a hotel to favorites.
 
 **Endpoint:** `POST /favorites`
 
 **Request Body:**
+
 ```json
 {
   "hotel_id": "uuid"
@@ -318,6 +356,7 @@ Add a hotel to favorites.
 ```
 
 #### DELETE - Remove from Favorites (Authenticated)
+
 Remove a hotel from favorites.
 
 **Endpoint:** `DELETE /favorites?hotel_id=HOTEL_ID`
@@ -327,14 +366,17 @@ Remove a hotel from favorites.
 ### Notifications API (`/notifications`)
 
 #### GET - List Notifications (Authenticated)
+
 Fetch user's notifications.
 
 **Endpoint:** `GET /notifications`
 
 **Query Parameters:**
+
 - `id` - Notification ID
 
 **Response:**
+
 ```json
 [
   {
@@ -350,11 +392,13 @@ Fetch user's notifications.
 ```
 
 #### PUT - Mark as Read (Authenticated)
+
 Mark a notification as read.
 
 **Endpoint:** `PUT /notifications?id=NOTIFICATION_ID`
 
 #### DELETE - Delete Notification (Authenticated)
+
 Delete a notification.
 
 **Endpoint:** `DELETE /notifications?id=NOTIFICATION_ID`
@@ -372,6 +416,7 @@ Delete a notification.
 - `500` - Internal Server Error
 
 ## Error Response Format
+
 ```json
 {
   "error": "Error message description"
@@ -381,12 +426,14 @@ Delete a notification.
 ## Data Models
 
 ### Booking Status Enum
+
 - `pending` - Booking created, awaiting confirmation
 - `confirmed` - Booking confirmed
 - `cancelled` - Booking cancelled
 - `completed` - Stay completed
 
 ### User Roles
+
 - `user` - Regular user (default)
 - `admin` - Administrator with full access
 
@@ -401,6 +448,7 @@ Delete a notification.
 ## Database Schema
 
 ### Tables
+
 - `profiles` - User profiles
 - `user_roles` - User role assignments
 - `hotels` - Hotel information
@@ -413,6 +461,7 @@ Delete a notification.
 - `notifications` - System notifications
 
 ### Storage
+
 - `hotel-images` - Public bucket for hotel images
 
 ## Notes
