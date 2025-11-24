@@ -14,7 +14,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CORS Configuration - SPECIFIC to your frontend
+// CORS Configuration -frontend
 app.use(cors({
   origin: [
     'https://tribetel-frontend-production.onrender.com'
