@@ -14,25 +14,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CORS Configuration -frontend
-app.use(cors({
-  origin: [
-    'https://tribetel-frontend-production.onrender.com'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
+// Middleware
+app.use(cors());
 app.use(express.json());
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
-  });
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // API Routes
@@ -49,8 +37,6 @@ app.get('/', (req, res) => {
   res.json({
     message: 'Hotel Booking API',
     version: '1.0.0',
-    backend_url: 'https://hotel-backend-hub-dyfd.onrender.com',
-    frontend_url: 'https://tribetel-frontend-production.onrender.com',
     endpoints: {
       health: '/health',
       hotels: '/api/hotels',
@@ -64,7 +50,7 @@ app.get('/', (req, res) => {
   });
 });
 
-
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
   res.status(500).json({ error: 'Internal server error' });
@@ -78,7 +64,6 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Frontend URL: https://tribetel-frontend-production.onrender.com`);
 });
 
 export default app;
